@@ -1,0 +1,29 @@
+mvn package
+
+This command should generate a aws-demo-1.0-SNAPSHOT.jar in the target folder. 
+Now that we have generated the jar file, we can use the AWS CLI to package the template for deployment.
+
+You will need an S3 bucket to store the artifacts for deployment. Once you have created the S3 bucket, run the following command :
+
+--------------------------------------------------------------------------------------------------------------------------------
+$ aws cloudformation package --template-file sam.yaml --output-template-file output-sam.yaml --s3-bucket <YOUR S3 BUCKET NAME>
+Uploading to xxxxxxxxxxxxxxxxxxxxxxxxxx  6464692 / 6464692.0  (100.00%)
+Successfully packaged artifacts and wrote output template to file output-sam.yaml.
+Execute the following command to deploy the packaged template
+aws cloudformation deploy --template-file /your/path/output-sam.yaml --stack-name <YOUR STACK NAME>
+--------------------------------------------------------------------------------------------------------------------------------
+
+As the command output suggests, you can now use the cli to deploy the application. Choose a stack name and run the aws cloudformation deploy command from the output of the package command.
+
+--------------------------------------------------------------------------------------------------------------------------------
+$ aws cloudformation deploy --template-file output-sam.yaml --stack-name ServerlessSpringBootSample --capabilities CAPABILITY_IAM
+--------------------------------------------------------------------------------------------------------------------------------
+
+Once the application is deployed, you can describe the stack to show the API endpoint that was created. 
+
+--------------------------------------------------------------------------------------------------------------------------------
+$ aws cloudformation describe-stacks --stack-name ServerlessSpringBootSample
+--------------------------------------------------------------------------------------------------------------------------------
+
+Copy the OutputValue into a browser to test a first request.
+e.g.: "OutputValue": "https://xxxxxxx.execute-api.us-west-2.amazonaws.com/Prod/XXX"
